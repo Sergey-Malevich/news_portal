@@ -1,0 +1,149 @@
+from news.models import POSTNEWS_CATEGORIES  -----  импортируем список новость/статья
+
+
+from django.contrib.auth.models import User    -----    подключаемся к стандартной модели User
+
+User.objects.create_user('User1')    ----  Создали первого пользователя
+
+User.objects.create_user(username ='User2', last_name = 'Максимов', first_name = 'Максим', password = '123')  ----  Создали второго пользователя
+
+
+from news.models import *   ------   подключаемся к созданным моделям
+
+Author1 = Author.objects.create(user = User.objects.all()[0], rating = 0)    -----  первый автор
+
+Author2 = Author.objects.create(user = User.objects.all()[1])        -----  второй автор
+
+
+cat1 = Category.objects.create(category='Бизнес')      ----- создаем категории новостей
+
+cat2 = Category.objects.create(category='Финансы')
+
+cat3 = Category.objects.create(category = 'Спорт')
+
+cat4 = Category.objects.create(category = 'Здоровье')
+
+
+
+//////  Добавляем статью/новость   ///////////
+
+text = 'Большой текст статьи Большой текст статьи Большой текст статьи Большой текст статьи'
+
+post1 = Post.objects.create(author = Author.objects.all()[0], title = 'Это заголовок статьи', content = text)
+
+post1.category.add(Category.objects.all()[0])  -----  указываем категорю
+
+post1.category.add(Category.objects.all()[1])   ----  указываем категорю
+
+
+text = 'Большой текст про пользу спорта для здоровья Большой текст про пользу спорта для здоровья Большой 
+        текст про пользу спорта для здоровья Большой текст про пользу спорта для здоровья Большой текст про 
+        пользу спорта для здоровья Большой текст про пользу спорта для здоровья Большой текст про пользу спорта для здоровья'
+
+post1 = Post.objects.create(author = Author.objects.all()[0], title = 'Это заголовок еще одной статьи', content = text)
+
+post1.category.add(Category.objects.all()[2], Category.objects.all()[3])
+
+
+text = ' Здесь будет текст про взлет акций спортивного магазина из-за разработаного ими 
+         велосипеда который массово скупают люди. Новость объединит категории Бизнес/Финансы/Спорт'
+
+post2 = Post.objects.create(author = Author.objects.all()[1],post_news = 'NEWS', title = ' заголовок заголовок заголовок заголовок ', content = text)
+
+post2.category.add(Category.objects.all()[0], Category.objects.all()[1], Category.objects.all()[2])
+
+
+/////////    Комментарии   //////
+
+comment1 = Comment.objects.create(comment_post = Post.objects.all()[1], comment_user = User.objects.all()[0], 
+                                   comment_content = 'комментарий ко второй статье от первого пользователя')
+
+comment2 = Comment.objects.create(comment_post = Post.objects.all()[0], comment_user = User.objects.all()[1], 
+                                  comment_content = 'коммент от юзер 2 к статье 1')
+
+
+comment3 = Comment.objects.create(comment_post = Post.objects.all()[2], comment_user = User.objects.all()[1], 
+                                  comment_content = 'коммент от юзер 2 к статье 3')
+
+comment4 = Comment.objects.create(comment_post = Post.objects.all()[1], comment_user = User.objects.all()[1], 
+                                  comment_content = 'коммент от юзер 2 к статье 2')
+
+
+---------   лайки/дизлайк   -----------
+
+com1 = Comment.objects.all().first()
+com1.like_comment()
+com1.dislike_comment()
+com1.dislike_comment()
+
+com2 = Comment.objects.all()[1]  
+com2.like_comment()              
+com2.like_comment()
+com2.like_comment()
+
+com3 = Comment.objects.all()[2]
+com3.dislike_comment() 
+com3.dislike_comment()
+com3.dislike_comment()
+
+com4 = Comment.objects.all()[3] 
+com4.like_comment()
+
+
+com_post = Post.objects.all()[0]    
+com_post.like_post()
+com_post.like_post()
+
+com_post1 = Post.objects.all()[1] 
+com_post1.like_post() 
+
+com_post2 = Post.objects.all()[2] 
+com_post2.dislike_post() 
+
+
+/////  обновляем рейтинг  //////
+
+up_user = Author.objects.all()[0]        
+   
+up_user.update_rating()
+
+up_user = Author.objects.all()[1]        
+   
+up_user.update_rating()
+
+
+//////////////////////////////////
+
+a=Author.objects.order_by('-rating').first()  ---- сортируем и забираем первый объект
+
+a.rating        ----  получаем рейтинг
+
+a.user.username  -----    получаем username
+
+//////////////////////////////////
+
+b=Post.objects.order_by('-rating_news').first()
+
+b.time_in            -----   время
+ 
+b.author.user.username   -----  юзернейм
+
+b.rating_news    -----  рейтинг 
+
+b.title   ------  заголовок
+
+b.preview_post()   -----  превью
+
+Comment.objects.filter(comment_post=b).all().values('time_in_comment', 'comment_user', 'rating_comment', 'comment_content')
+
+
+
+
+
+
+
+
+
+
+
+
